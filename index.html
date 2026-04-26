@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Fifth Avenue — Ali</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Vapi SDK loaded FIRST so it is ready before page runs -->
+  <script src="https://cdn.jsdelivr.net/npm/@vapi-ai/web@2.1.1/dist/vapi.umd.js"></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --red: #e63946;
       --dark: #0d0d0d;
@@ -16,7 +19,6 @@
       --text: #f0ece4;
       --muted: #6b6560;
     }
-
     html, body {
       height: 100%;
       background: var(--dark);
@@ -24,7 +26,6 @@
       font-family: 'DM Sans', sans-serif;
       overflow: hidden;
     }
-
     body {
       display: flex;
       flex-direction: column;
@@ -34,7 +35,6 @@
       padding: 24px;
       position: relative;
     }
-
     .bg-pattern {
       position: fixed;
       inset: 0;
@@ -42,7 +42,6 @@
                         radial-gradient(circle at 80% 80%, rgba(244,161,29,0.06) 0%, transparent 50%);
       pointer-events: none;
     }
-
     .card {
       background: var(--card);
       border: 0.5px solid rgba(255,255,255,0.07);
@@ -56,7 +55,6 @@
       position: relative;
       z-index: 1;
     }
-
     .badge {
       background: var(--red);
       color: white;
@@ -68,7 +66,6 @@
       border-radius: 20px;
       margin-bottom: 20px;
     }
-
     .logo {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 52px;
@@ -78,9 +75,7 @@
       letter-spacing: 0.04em;
       margin-bottom: 4px;
     }
-
     .logo span { color: var(--red); }
-
     .tagline {
       font-size: 12px;
       color: var(--muted);
@@ -88,60 +83,38 @@
       text-transform: uppercase;
       margin-bottom: 36px;
     }
-
-    .avatar-wrap {
-      position: relative;
-      margin-bottom: 28px;
-    }
-
+    .avatar-wrap { position: relative; margin-bottom: 28px; }
     .avatar {
-      width: 90px;
-      height: 90px;
+      width: 90px; height: 90px;
       border-radius: 50%;
       background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
       border: 2px solid rgba(255,255,255,0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 38px;
     }
-
     .online-dot {
-      position: absolute;
-      bottom: 4px;
-      right: 4px;
-      width: 14px;
-      height: 14px;
+      position: absolute; bottom: 4px; right: 4px;
+      width: 14px; height: 14px;
       border-radius: 50%;
       background: #22c55e;
       border: 2px solid var(--card);
     }
-
     .online-dot.calling { background: var(--gold); animation: blink 0.8s infinite; }
     .online-dot.active  { background: var(--red);  animation: blink 0.6s infinite; }
-
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0.3; }
     }
-
     .agent-name { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
     .agent-role { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
-
     .waves {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      height: 32px;
-      margin-bottom: 32px;
-      opacity: 0;
-      transition: opacity 0.4s;
+      display: flex; align-items: center; gap: 4px;
+      height: 32px; margin-bottom: 32px;
+      opacity: 0; transition: opacity 0.4s;
     }
     .waves.visible { opacity: 1; }
-
     .wave-bar {
-      width: 3px;
-      border-radius: 3px;
+      width: 3px; border-radius: 3px;
       background: var(--red);
       animation: wave 1s ease-in-out infinite;
     }
@@ -154,84 +127,53 @@
     .wave-bar:nth-child(7) { animation-delay: 0.2s; }
     .wave-bar:nth-child(8) { animation-delay: 0.1s; }
     .wave-bar:nth-child(9) { animation-delay: 0.0s; }
-
     @keyframes wave {
       0%, 100% { height: 4px; }
       50%       { height: 28px; }
     }
-
     .talk-btn {
-      width: 100%;
-      height: 56px;
-      border-radius: 16px;
-      border: none;
-      background: var(--red);
-      color: white;
+      width: 100%; height: 56px;
+      border-radius: 16px; border: none;
+      background: var(--red); color: white;
       font-family: 'DM Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 500;
+      font-size: 16px; font-weight: 500;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
       transition: all 0.2s;
     }
-
     .talk-btn:active   { transform: scale(0.98); }
     .talk-btn.calling  { background: var(--gold); color: #1a0f00; }
     .talk-btn.active   { background: #1e1e1e; border: 1.5px solid var(--red); color: var(--red); }
     .talk-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
     .status-text {
-      margin-top: 16px;
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      min-height: 18px;
+      margin-top: 16px; font-size: 12px;
+      color: var(--muted); text-align: center; min-height: 18px;
     }
     .status-text.live { color: var(--red); }
-
     .divider {
-      width: 100%;
-      height: 0.5px;
+      width: 100%; height: 0.5px;
       background: rgba(255,255,255,0.06);
       margin: 24px 0 20px;
     }
-
     .menu-preview {
       width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     }
-
     .menu-chip {
       background: #1a1a1a;
       border: 0.5px solid rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 8px 10px;
-      font-size: 11px;
-      color: #8a8480;
+      border-radius: 10px; padding: 8px 10px;
+      font-size: 11px; color: #8a8480;
     }
-
     .menu-chip strong {
-      display: block;
-      color: #c0bbb4;
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 1px;
+      display: block; color: #c0bbb4;
+      font-size: 12px; font-weight: 500; margin-bottom: 1px;
     }
-
     .footer {
-      margin-top: 28px;
-      font-size: 11px;
-      color: #3a3835;
-      text-align: center;
-      position: relative;
-      z-index: 1;
+      margin-top: 28px; font-size: 11px;
+      color: #3a3835; text-align: center;
+      position: relative; z-index: 1;
     }
-
     .error-box {
       display: none;
       margin-top: 12px;
@@ -239,10 +181,8 @@
       border: 0.5px solid rgba(230,57,70,0.3);
       border-radius: 10px;
       padding: 10px 14px;
-      font-size: 12px;
-      color: #e63946;
-      text-align: center;
-      width: 100%;
+      font-size: 12px; color: #e63946;
+      text-align: center; width: 100%;
     }
   </style>
 </head>
@@ -299,53 +239,50 @@
   const ASSISTANT_ID = "99cade8c-83dc-43bf-9980-23b6d27fc8b9";
   const PUBLIC_KEY   = "928f41b5-91fa-456e-bb3d-529c55c8290d";
 
-  let vapi        = null;
-  let callActive  = false;
-  let callStarting= false;
+  let vapi         = null;
+  let callActive   = false;
+  let callStarting = false;
+
+  function showError(msg) {
+    const el         = document.getElementById("errorBox");
+    el.textContent   = msg;
+    el.style.display = "block";
+  }
 
   function setUI(state) {
     const btn    = document.getElementById("talkBtn");
-    const label  = document.getElementById("btnLabel");
     const status = document.getElementById("statusText");
     const dot    = document.getElementById("dot");
     const waves  = document.getElementById("waves");
     const errBox = document.getElementById("errorBox");
 
-    btn.className   = "talk-btn";
-    dot.className   = "online-dot";
+    btn.className        = "talk-btn";
+    dot.className        = "online-dot";
     errBox.style.display = "none";
     waves.classList.remove("visible");
 
     if (state === "idle") {
-      label.textContent  = "Ali se baat karein";
-      btn.innerHTML      = `<span>📞</span><span id="btnLabel">Ali se baat karein</span>`;
+      btn.innerHTML      = `<span>📞</span><span>Ali se baat karein</span>`;
       status.textContent = "Online — Order lene ke liye tayyar hai";
       status.className   = "status-text";
     } else if (state === "calling") {
       btn.classList.add("calling");
-      btn.innerHTML      = `<span>⏳</span><span id="btnLabel">Connect ho raha hai...</span>`;
+      btn.innerHTML      = `<span>⏳</span><span>Connect ho raha hai...</span>`;
       status.textContent = "Thora wait karein...";
       status.className   = "status-text";
       dot.classList.add("calling");
     } else if (state === "active") {
       btn.classList.add("active");
-      btn.innerHTML      = `<span>🔴</span><span id="btnLabel">Call khatam karein</span>`;
+      btn.innerHTML      = `<span>🔴</span><span>Call khatam karein</span>`;
       status.textContent = "Ali sun raha hai — baat karein!";
       status.className   = "status-text live";
       dot.classList.add("active");
       waves.classList.add("visible");
     } else if (state === "error") {
-      label.textContent  = "Ali se baat karein";
-      btn.innerHTML      = `<span>📞</span><span id="btnLabel">Dobara try karein</span>`;
+      btn.innerHTML      = `<span>📞</span><span>Dobara try karein</span>`;
       status.textContent = "";
       status.className   = "status-text";
     }
-  }
-
-  function showError(msg) {
-    const errBox = document.getElementById("errorBox");
-    errBox.textContent   = msg;
-    errBox.style.display = "block";
   }
 
   function initVapi() {
@@ -377,12 +314,12 @@
         callActive   = false;
         callStarting = false;
         setUI("error");
-        showError("Kuch masla aaya: " + (e?.message || "Unknown error") + " — Dobara try karein");
+        showError("Masla aaya: " + (e?.message || JSON.stringify(e)));
       });
 
     } catch(err) {
-      console.error("Vapi init error:", err);
-      showError("Vapi load nahi hua: " + err.message);
+      console.error("Init error:", err);
+      showError("Vapi shuru nahi hua: " + err.message);
     }
   }
 
@@ -395,7 +332,7 @@
     }
 
     if (!vapi) {
-      showError("Vapi abhi load ho raha hai, thora wait karein");
+      showError("Page dobara reload karein");
       return;
     }
 
@@ -404,24 +341,23 @@
 
     try {
       await vapi.start(ASSISTANT_ID);
-    } catch (e) {
+    } catch(e) {
       console.error("Start error:", e);
       callStarting = false;
       setUI("error");
-      showError("Connect nahi hua: " + (e?.message || e) + " — Dobara try karein");
+      showError("Connect nahi hua: " + (e?.message || JSON.stringify(e)));
     }
   }
 
-  window.addEventListener("load", () => {
+  // SDK already in <head> so just init on DOMContentLoaded
+  document.addEventListener("DOMContentLoaded", () => {
     if (typeof window.Vapi === "undefined") {
-      showError("Vapi SDK load nahi hua. Internet check karein aur page reload karein.");
+      showError("Vapi SDK load nahi hua — internet check karein aur reload karein");
       return;
     }
     initVapi();
   });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@vapi-ai/web@2.1.1/dist/vapi.umd.js"></script>
 
 </body>
 </html>
