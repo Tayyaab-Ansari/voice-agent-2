@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Fifth Avenue — Ali</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-
-  <!-- Vapi SDK loaded FIRST so it is ready before page runs -->
-  <script src="https://cdn.jsdelivr.net/npm/@vapi-ai/web@2.1.1/dist/vapi.umd.js"></script>
-
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -36,10 +32,10 @@
       position: relative;
     }
     .bg-pattern {
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(circle at 20% 20%, rgba(230,57,70,0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(244,161,29,0.06) 0%, transparent 50%);
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(230,57,70,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(244,161,29,0.06) 0%, transparent 50%);
       pointer-events: none;
     }
     .card {
@@ -47,46 +43,30 @@
       border: 0.5px solid rgba(255,255,255,0.07);
       border-radius: 24px;
       padding: 40px 32px 36px;
-      width: 100%;
-      max-width: 360px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      z-index: 1;
+      width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 1;
     }
     .badge {
-      background: var(--red);
-      color: white;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 20px;
+      background: var(--red); color: white;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 20px; margin-bottom: 20px;
     }
     .logo {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 52px;
-      color: var(--text);
-      line-height: 1;
-      text-align: center;
-      letter-spacing: 0.04em;
-      margin-bottom: 4px;
+      font-size: 52px; color: var(--text);
+      line-height: 1; text-align: center;
+      letter-spacing: 0.04em; margin-bottom: 4px;
     }
     .logo span { color: var(--red); }
     .tagline {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 36px;
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 36px;
     }
     .avatar-wrap { position: relative; margin-bottom: 28px; }
     .avatar {
-      width: 90px; height: 90px;
-      border-radius: 50%;
+      width: 90px; height: 90px; border-radius: 50%;
       background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
       border: 2px solid rgba(255,255,255,0.06);
       display: flex; align-items: center; justify-content: center;
@@ -94,16 +74,13 @@
     }
     .online-dot {
       position: absolute; bottom: 4px; right: 4px;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: #22c55e;
-      border: 2px solid var(--card);
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #22c55e; border: 2px solid var(--card);
     }
     .online-dot.calling { background: var(--gold); animation: blink 0.8s infinite; }
     .online-dot.active  { background: var(--red);  animation: blink 0.6s infinite; }
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
     }
     .agent-name { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
     .agent-role { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
@@ -128,16 +105,14 @@
     .wave-bar:nth-child(8) { animation-delay: 0.1s; }
     .wave-bar:nth-child(9) { animation-delay: 0.0s; }
     @keyframes wave {
-      0%, 100% { height: 4px; }
-      50%       { height: 28px; }
+      0%, 100% { height: 4px; } 50% { height: 28px; }
     }
     .talk-btn {
       width: 100%; height: 56px;
       border-radius: 16px; border: none;
       background: var(--red); color: white;
       font-family: 'DM Sans', sans-serif;
-      font-size: 16px; font-weight: 500;
-      cursor: pointer;
+      font-size: 16px; font-weight: 500; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       transition: all 0.2s;
     }
@@ -175,12 +150,10 @@
       position: relative; z-index: 1;
     }
     .error-box {
-      display: none;
-      margin-top: 12px;
+      display: none; margin-top: 12px;
       background: #2a0a0a;
       border: 0.5px solid rgba(230,57,70,0.3);
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 10px; padding: 10px 14px;
       font-size: 12px; color: #e63946;
       text-align: center; width: 100%;
     }
@@ -239,12 +212,12 @@
   const ASSISTANT_ID = "99cade8c-83dc-43bf-9980-23b6d27fc8b9";
   const PUBLIC_KEY   = "928f41b5-91fa-456e-bb3d-529c55c8290d";
 
-  let vapi         = null;
+  let vapiInstance = null;
   let callActive   = false;
   let callStarting = false;
 
   function showError(msg) {
-    const el         = document.getElementById("errorBox");
+    const el = document.getElementById("errorBox");
     el.textContent   = msg;
     el.style.display = "block";
   }
@@ -285,41 +258,56 @@
     }
   }
 
-  function initVapi() {
-    try {
-      vapi = new window.Vapi(PUBLIC_KEY);
+  function startVapi() {
+    // Using the official Vapi HTML script tag SDK (window.vapiSDK)
+    vapiInstance = window.vapiSDK.run({
+      apiKey:    PUBLIC_KEY,
+      assistant: ASSISTANT_ID,
+      config: {
+        position:        "bottom-right",
+        offset:          "40px",
+        width:           "50px",
+        height:          "50px",
+        idle:            { color: "transparent", type: "round", icon: "" },
+        loading:         { color: "transparent", type: "round", icon: "" },
+        active:          { color: "transparent", type: "round", icon: "" },
+      }
+    });
 
-      vapi.on("call-start", () => {
+    // Hide the default Vapi floating button — we use our own
+    setTimeout(() => {
+      const vapiBtn = document.querySelector("vapiAI, vapi-button, [class*='vapi']");
+      if (vapiBtn) vapiBtn.style.display = "none";
+    }, 1000);
+
+    if (vapiInstance) {
+      vapiInstance.on("call-start", () => {
         callActive   = true;
         callStarting = false;
         setUI("active");
       });
 
-      vapi.on("call-end", () => {
+      vapiInstance.on("call-end", () => {
         callActive   = false;
         callStarting = false;
         setUI("idle");
       });
 
-      vapi.on("speech-start", () => {
+      vapiInstance.on("speech-start", () => {
         document.getElementById("waves").classList.add("visible");
       });
 
-      vapi.on("speech-end", () => {
+      vapiInstance.on("speech-end", () => {
         document.getElementById("waves").classList.remove("visible");
       });
 
-      vapi.on("error", (e) => {
+      vapiInstance.on("error", (e) => {
         console.error("Vapi error:", e);
         callActive   = false;
         callStarting = false;
         setUI("error");
         showError("Masla aaya: " + (e?.message || JSON.stringify(e)));
       });
-
-    } catch(err) {
-      console.error("Init error:", err);
-      showError("Vapi shuru nahi hua: " + err.message);
     }
   }
 
@@ -327,11 +315,11 @@
     if (callStarting) return;
 
     if (callActive) {
-      vapi.stop();
+      if (vapiInstance) vapiInstance.stop();
       return;
     }
 
-    if (!vapi) {
+    if (!vapiInstance) {
       showError("Page dobara reload karein");
       return;
     }
@@ -340,7 +328,7 @@
     setUI("calling");
 
     try {
-      await vapi.start(ASSISTANT_ID);
+      await vapiInstance.start(ASSISTANT_ID);
     } catch(e) {
       console.error("Start error:", e);
       callStarting = false;
@@ -349,14 +337,24 @@
     }
   }
 
-  // SDK already in <head> so just init on DOMContentLoaded
-  document.addEventListener("DOMContentLoaded", () => {
-    if (typeof window.Vapi === "undefined") {
-      showError("Vapi SDK load nahi hua — internet check karein aur reload karein");
-      return;
-    }
-    initVapi();
-  });
+  // Load official Vapi script tag SDK dynamically
+  (function(d, t) {
+    var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+    g.defer = true;
+    g.async = true;
+    s.parentNode.insertBefore(g, s);
+    g.onload = function() {
+      if (typeof window.vapiSDK !== "undefined") {
+        startVapi();
+      } else {
+        showError("Vapi load nahi hua — reload karein");
+      }
+    };
+    g.onerror = function() {
+      showError("Vapi script load nahi hua — internet check karein");
+    };
+  })(document, "script");
 </script>
 
 </body>
